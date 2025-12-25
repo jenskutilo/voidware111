@@ -11451,7 +11451,7 @@ run(function()
 	})
 end)
 
--- Deaktiviere bestimmte Features beim Start
+-- Aktiviere/Deaktiviere bestimmte Features beim Start
 task.spawn(function()
 	repeat task.wait() until shared.VapeFullyLoaded
 	task.wait(1) -- Warte kurz, damit alle Features geladen sind
@@ -11464,13 +11464,31 @@ task.spawn(function()
 		"Nametags", "NametagsOptionsButton", "NametagsButton", "NameTags", "NameTagsOptionsButton"
 	}
 	
-	-- Durchsuche alle gespeicherten Objekte und deaktiviere die Features
+	-- Liste der Features, die aktiviert werden sollen (ESP-Features)
+	local featuresToEnable = {
+		"ESP", "ESPOptionsButton", "ESPButton", "PlayerESP", "PlayerESPOptionsButton",
+		"EntityESP", "EntityESPOptionsButton", "RenderESP", "RenderESPOptionsButton"
+	}
+	
+	-- Durchsuche alle gespeicherten Objekte
 	for featureName, featureObj in pairs(GuiLibrary.ObjectsThatCanBeSaved) do
+		-- Deaktiviere bestimmte Features
 		for _, disableName in pairs(featuresToDisable) do
 			if string.find(string.lower(featureName), string.lower(disableName)) then
 				pcall(function()
 					if featureObj and featureObj.Api and featureObj.Api.Enabled then
 						featureObj.Api.ToggleButton(false)
+					end
+				end)
+			end
+		end
+		
+		-- Aktiviere ESP-Features
+		for _, enableName in pairs(featuresToEnable) do
+			if string.find(string.lower(featureName), string.lower(enableName)) then
+				pcall(function()
+					if featureObj and featureObj.Api and not featureObj.Api.Enabled then
+						featureObj.Api.ToggleButton(true)
 					end
 				end)
 			end
