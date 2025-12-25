@@ -3,11 +3,9 @@ repeat task.wait() until game:IsLoaded()
 -- ============================================
 -- GITHUB REPOSITORY KONFIGURATION
 -- ============================================
--- Setze hier dein GitHub-Repository:
--- Format: "DeinUsername/DeinRepository"
--- Beispiel: "josef/Voidware-Custom"
-local MY_GITHUB_REPO = shared.MyGitHubRepo or "DeinUsername/DeinRepository"  -- ÄNDERE DIESEN WERT!
-local MY_GITHUB_BRANCH = shared.MyGitHubBranch or "main"  -- ÄNDERE DIESEN WERT FALLS NÖTIG!
+-- Dein GitHub-Repository:
+local MY_GITHUB_REPO = shared.MyGitHubRepo or "jenskutilo/voidware111"
+local MY_GITHUB_BRANCH = shared.MyGitHubBranch or "main"
 -- ============================================
 
 shared.oldgetcustomasset = shared.oldgetcustomasset or getcustomasset
@@ -643,11 +641,21 @@ local function vapeGithubRequest(scripturl, isImportant)
         
         -- Wenn dein Repository gesetzt ist UND nicht "DeinUsername/DeinRepository" (Standardwert)
         if customRepo and customRepo ~= "DeinUsername/DeinRepository" then
+            -- Versuche zuerst den Standard-Pfad (CustomModules/VW6872274481.lua)
             local customUrl = "https://raw.githubusercontent.com/"..customRepo.."/"..customBranch.."/"..scripturl
             suc, res = pcall(function() return game:HttpGet(customUrl, true) end)
             if suc and res and res ~= "404: Not Found" then
                 if scripturl:find(".lua") then res = "--This watermark is used to delete the file if its cached, remove it to make the file persist after commits.\n"..res end
                 return res
+            end
+            -- Fallback: Versuche auch im Root-Verzeichnis (falls die Datei dort liegt)
+            if scripturl == "CustomModules/VW6872274481.lua" then
+                local rootUrl = "https://raw.githubusercontent.com/"..customRepo.."/"..customBranch.."/VW6872274481.lua"
+                suc, res = pcall(function() return game:HttpGet(rootUrl, true) end)
+                if suc and res and res ~= "404: Not Found" then
+                    if scripturl:find(".lua") then res = "--This watermark is used to delete the file if its cached, remove it to make the file persist after commits.\n"..res end
+                    return res
+                end
             end
         end
     end
