@@ -622,7 +622,8 @@ local function vapeGithubRequest(scripturl, isImportant)
     local suc, res
     -- Liste der Dateien, die von deinem eigenen Repository geladen werden sollen
     local customFiles = {
-        "CustomModules/VW6872274481.lua"  -- Nur die bearbeitete Datei
+        "CustomModules/VW6872274481.lua",  -- Die bearbeitete CustomModule-Datei
+        "MainScript.lua"  -- Die bearbeitete MainScript-Datei
     }
     
     -- Prüfe ob diese Datei von deinem Repository geladen werden soll
